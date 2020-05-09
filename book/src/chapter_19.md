@@ -168,6 +168,24 @@ impl State {
 }
 ```
 
+## Preventing healing when hungry or starving
+
+This new system will conflict with the passive healing system we added earlier. We should prevent the player from wait-healing while hungry or starving. In `player.rs`, we modify `skip_turn`:
+
+```rust
+let hunger_clocks = ecs.read_storage::<HungerClock>();
+let hc = hunger_clocks.get(*player_entity);
+if let Some(hc) = hc {
+    match hc.state {
+        HungerState::Hungry => can_heal = false,
+        HungerState::Starving => can_heal = false,
+        _ => {}
+    }
+}
+
+if can_heal {
+```
+
 If you `cargo run` now, and hit wait a *lot* - you'll starve to death.
 
 ![Screenshot](./c19-s1.jpg)
@@ -309,24 +327,6 @@ if let Some(hc) = hc {
 ```
 
 And that's it! You get a +1 power bonus for being full of rations.
-
-## Preventing healing when hungry or starving
-
-As another benefit to food, we'll prevent you from wait-healing while hungry or starving (this also balances the healing system we added earlier). In `player.rs`, we modify `skip_turn`:
-
-```rust
-let hunger_clocks = ecs.read_storage::<HungerClock>();
-let hc = hunger_clocks.get(*player_entity);
-if let Some(hc) = hc {
-    match hc.state {
-        HungerState::Hungry => can_heal = false,
-        HungerState::Starving => can_heal = false,
-        _ => {}
-    }
-}
-
-if can_heal {
-```
 
 ## Wrap-Up
 
