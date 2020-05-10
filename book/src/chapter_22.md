@@ -405,7 +405,7 @@ Since the `visibility_system` already handles *revealing* tiles, why not make it
 
 ```rust
 use specs::prelude::*;
-use super::{Viewshed, Position, Map, Player, Hidden, gamelog::GameLog};
+use super::{Viewshed, Position, Map, Player, Hidden, gamelog::GameLog, Name};
 use rltk::{field_of_view, Point};
 
 pub struct VisibilitySystem {}
